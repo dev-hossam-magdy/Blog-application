@@ -32,9 +32,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    dataBinding {
-        enabled = true
-    }
 
 }
 
@@ -107,5 +104,7 @@ dependencies {
     def leak_canary_version = "2.2"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
 
+//    kapt 'com.android.databinding:compiler:3.0.1
+//    kapt "androidx.databinding:databinding-compiler:4.1.0-alpha04"
 
 }

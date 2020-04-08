@@ -9,12 +9,9 @@ import javax.inject.Inject
 class AuthActivity : DaggerAppCompatActivity() {
 
     private val TAG ="AuthActivity"
-    @Inject
-    lateinit var string: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        Log.e(TAG,"dagger work... $string")
     }
 }

@@ -1,20 +1,19 @@
 package com.example.blogapplication.ui.auth
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 
 import com.example.blogapplication.R
+import com.example.blogapplication.base.auth.BaseAuthFragment
 import kotlinx.android.synthetic.main.fragment_launcher.*
 
 
-class LauncherFragment : Fragment() {
+class LauncherFragment : BaseAuthFragment() {
+    private val TAG = "LauncherFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +41,9 @@ class LauncherFragment : Fragment() {
     private fun navigateToDustination(destinationActionId: Int) {
         findNavController().navigate(destinationActionId)
     }
-
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Log.e(TAG,"the view model work ${viewModel.hashCode()}")
+    }
 
 }
