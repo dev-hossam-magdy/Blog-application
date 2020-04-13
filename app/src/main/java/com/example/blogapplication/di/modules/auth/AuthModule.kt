@@ -1,5 +1,6 @@
 package com.example.blogapplication.di.modules.auth
 
+import android.content.SharedPreferences
 import com.example.blogapplication.api.auth.OpenApiAuthService
 import com.example.blogapplication.di.anotaion.AuthScope
 import com.example.blogapplication.persistence.daos.AccountPropertiesDao
@@ -26,15 +27,18 @@ object AuthModule {
         accountPropertiesDao: AccountPropertiesDao,
         authTokenDao: AuthTokenDao,
         openApiAuthService: OpenApiAuthService,
-        sessionManager: SessionManager
-
+        sessionManager: SessionManager,
+        sharedPreferences: SharedPreferences,
+        editor: SharedPreferences.Editor
 
     ): AuthRepository =
         AuthRepository(
             accountPropertiesDao =accountPropertiesDao,
             authTokenDao =authTokenDao,
             openApiAuthService =openApiAuthService,
-            sessionManager =sessionManager
+            sessionManager =sessionManager,
+            sharedPreferences =sharedPreferences ,
+            sharedPreferencesEditor = editor
         )
 
 

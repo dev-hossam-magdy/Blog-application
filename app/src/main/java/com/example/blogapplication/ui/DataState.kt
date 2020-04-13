@@ -3,8 +3,8 @@ package com.example.blogapplication.ui
 
 sealed class DataState<T>(
     val isLoading: Boolean = false,
-    data: Event<T>? = null,
-    response: Event<Response>? = null
+    val data: Event<T>? = null,
+    val response: Event<Response>? = null
 ) {
 
     class Error<T>(response: Response) : DataState<T>(response = Event.responseEvent(response))
@@ -14,7 +14,7 @@ sealed class DataState<T>(
         data = Event.dataEvent(cachedData)
     )
 
-    class Data<T>(data: T?, response: Response) : DataState<T>(
+    class Data<T>(data: T?, response: Response?) : DataState<T>(
         data = Event.dataEvent(data),
         response = Event.responseEvent(response)
     )

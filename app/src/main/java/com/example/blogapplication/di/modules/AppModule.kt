@@ -1,6 +1,8 @@
 package com.example.blogapplication.di.modules
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -12,6 +14,7 @@ import com.example.blogapplication.persistence.daos.AuthTokenDao
 import com.example.blogapplication.session.SessionManager
 import com.example.blogapplication.util.Constants
 import com.example.blogapplication.util.LiveDataCallAdapterFactory
+import com.example.blogapplication.util.PreferenceKeys
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -77,6 +80,15 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
 
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(application: Application):SharedPreferences =
+        application.getSharedPreferences(PreferenceKeys.APP_PREFERENCES,Context.MODE_PRIVATE)
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferencesEditor(sharedPreferences: SharedPreferences):SharedPreferences.Editor =
+        sharedPreferences.edit()
 
 
 

@@ -3,7 +3,7 @@ package com.example.blogapplication.ui.auth.state
 sealed class AuthStateEvent {
 
     data class LoginAttempEvent(
-        val username: String,
+        val email: String,
         val password: String
     ) : AuthStateEvent()
 

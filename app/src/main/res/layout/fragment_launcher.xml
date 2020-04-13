@@ -18,12 +18,14 @@
 
         <ImageView
             android:id="@+id/logoImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/codingwithmitch_logo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/jetpack_logo"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            app:layout_constraintTop_toBottomOf="@+id/horizontaolGuideLine"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/horizontaolGuideLine"
             android:contentDescription="@string/logo" />
     <TextView
         android:id="@+id/loginTextView"

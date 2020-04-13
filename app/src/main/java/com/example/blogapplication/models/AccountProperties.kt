@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 
 
 @Entity(tableName = "account_properties")
-data class AccountProperties (
+data class AccountProperties(
 
     @SerializedName("pk")
     @Expose
@@ -19,10 +19,10 @@ data class AccountProperties (
     @SerializedName("email")
     @Expose
     @ColumnInfo(name = "email")
-    var email:Int,
+    var email: String,
 
     @SerializedName("username")
     @Expose
     @ColumnInfo(name = "username")
-    var username:Int
+    var username: String
 )

@@ -7,7 +7,7 @@ import com.example.blogapplication.models.AuthToken
 import com.example.blogapplication.persistence.daos.AccountPropertiesDao
 import com.example.blogapplication.persistence.daos.AuthTokenDao
 
-@Database(entities = [AccountProperties::class,AuthToken::class],version = 1 ,exportSchema = false)
+@Database(entities = [AccountProperties::class,AuthToken::class],version = 2 ,exportSchema = false)
 abstract class AppDatabase:RoomDatabase() {
     abstract fun getAuthTokenDao():AuthTokenDao
     abstract fun getAccountPropertiesDao(): AccountPropertiesDao

@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.blogapplication.R
 import com.example.blogapplication.base.auth.BaseAuthFragment
+import com.example.blogapplication.models.AuthToken
+import com.example.blogapplication.ui.auth.state.AuthStateEvent
 import com.example.blogapplication.ui.auth.state.LoginFields
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -23,19 +25,36 @@ class LoginFragment : BaseAuthFragment() {
         // Inflate the layout for this fragment
 //        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_login,container, false)
 //        val view = binding.root
-        return inflater.inflate(R.layout.fragment_login,container, false)
+        return inflater.inflate(R.layout.fragment_login, container, false)
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.e(TAG, "the view model work ${viewModel.hashCode()}")
+        loginBtn.setOnClickListener {
+            Log.e(TAG, "onActivityCreated: loginBtn.setOnClickListener::  ")
+
+            fireLoginEvent()
+            Log.e(TAG, "onActivityCreated: loginBtn.setOnClickListener:: worked ")
+        }
 //       binding.vm = viewModel
         subscribeObservers()
     }
 
+    private fun fireLoginEvent() {
+        Log.e(TAG, "onActivityCreated: loginBtn.setOnClickListener: fireLoginEvent ")
+        viewModel.setStateEvent(
+            AuthStateEvent.LoginAttempEvent(
+                inputEmail.text.toString(),
+                inputPassword.text.toString()
+            )
+        )
+    }
+
     private fun subscribeObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner, Observer {authViewState->
-            authViewState.loginFields?.let { fields->
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { authViewState ->
+            authViewState.loginFields?.let { fields ->
                 fields.loginEmail?.let { inputEmail.setText(it) }
                 fields.loginPassword?.let { inputPassword.setText(it) }
             }
@@ -45,7 +64,7 @@ class LoginFragment : BaseAuthFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.setLoginFields(
-            LoginFields(inputEmail.text.toString(),inputPassword.text.toString())
+            LoginFields(inputEmail.text.toString(), inputPassword.text.toString())
         )
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.blogapplication.R
 import com.example.blogapplication.base.auth.BaseAuthFragment
+import com.example.blogapplication.ui.auth.state.AuthStateEvent
 import com.example.blogapplication.ui.auth.state.RegistarationFields
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -31,6 +32,20 @@ class RegisterFragment : BaseAuthFragment() {
         super.onActivityCreated(savedInstanceState)
         Log.e(TAG, "the view model work ${viewModel.hashCode()}")
         subscribeObservers()
+        registerBtn.setOnClickListener {
+            register()
+        }
+    }
+
+    private fun register() {
+        viewModel.setStateEvent(
+            AuthStateEvent.RegisterAttempsEvent(
+                registerInputEmail.text.toString(),
+                inputUsername.text.toString(),
+                inputPassword.text.toString(),
+                inputPasswordConfirm.text.toString()
+            )
+        )
     }
 
     private fun subscribeObservers() {
