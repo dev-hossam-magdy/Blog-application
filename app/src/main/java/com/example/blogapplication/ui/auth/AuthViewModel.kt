@@ -2,7 +2,6 @@ package com.example.blogapplication.ui.auth
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import com.example.blogapplication.di.anotaion.AuthScope
 import com.example.blogapplication.models.AuthToken
 import com.example.blogapplication.repository.auth.AuthRepository
@@ -56,6 +55,14 @@ class AuthViewModel @Inject constructor(
                     stateEvent.username
                 )
             }
+            is AuthStateEvent.None ->{
+               object :LiveData<DataState<AuthViewState>>(){
+                   override fun onActive() {
+                       super.onActive()
+                       value = DataState.Data(null,null)
+                   }
+               }
+            }
         }
 
     fun setRegistrationFields(registarationFields: RegistarationFields) {
@@ -83,13 +90,14 @@ class AuthViewModel @Inject constructor(
         _viewState.value = update
     }
 
-    fun cancelActiveJops(){
-        authRepository.cancelActivesJob()
+    fun cancelActiveJobs(){
+        authRepository.cancelActiveJobs()
     }
 
     override fun onCleared() {
         super.onCleared()
-        cancelActiveJops()
+        setStateEvent(AuthStateEvent.None())
+        cancelActiveJobs()
     }
 
 }

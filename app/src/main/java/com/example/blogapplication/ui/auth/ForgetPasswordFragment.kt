@@ -1,11 +1,8 @@
 package com.example.blogapplication.ui.auth
 
 import android.annotation.SuppressLint
-import android.content.ComponentCallbacks
 import android.content.Context
 import android.os.Bundle
-import android.os.Message
-import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +14,6 @@ import android.webkit.WebViewClient
 import androidx.navigation.fragment.findNavController
 
 import com.example.blogapplication.R
-import com.example.blogapplication.base.auth.BaseAuthFragment
 import com.example.blogapplication.ui.DataState
 import com.example.blogapplication.ui.DataStateChangesListener
 import com.example.blogapplication.ui.Response

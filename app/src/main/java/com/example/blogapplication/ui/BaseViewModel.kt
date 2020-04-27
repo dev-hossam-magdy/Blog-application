@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 
 abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
 
+    // hold data
     protected var _stateEvent: MutableLiveData<StateEvent> = MutableLiveData()
 
     protected var _viewState: MutableLiveData<ViewState> = MutableLiveData()
@@ -37,34 +38,3 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
 
 }
 
-
-//abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
-//    private val TAG = "BaseViewModel"
-//
-//    protected val _stateEvent: MutableLiveData<StateEvent> = MutableLiveData()
-//    protected val _viewState: MutableLiveData<ViewState> = MutableLiveData()
-//
-//    val viewState: MutableLiveData<ViewState>
-//        get() = _viewState
-//    val dataState:LiveData<DataState<ViewState>> = Transformations
-//        .switchMap(_stateEvent){ stateEvent ->
-//            stateEvent?.let {
-//                handelStatEvent(stateEvent)
-//            }
-//
-//        }
-//
-//    fun stateEvent(event: StateEvent){
-//        _stateEvent.value = event
-//    }
-//
-//    fun setCurrentStateOrNew():ViewState{
-//        val value = viewState.value?.let { it }?: initNewViewState()
-//        return value
-//    }
-//
-//    abstract fun initNewViewState(): ViewState
-//
-//    abstract fun handelStatEvent(stateEvent: StateEvent):LiveData<DataState<ViewState>>
-//
-//}

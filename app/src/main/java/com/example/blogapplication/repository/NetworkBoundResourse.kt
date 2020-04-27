@@ -14,9 +14,11 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
-abstract class NetworkBoundResourse<ResponseObject, ViewStatType>(
+abstract class NetworkBoundResourse<ResponseObject, CachedObject, ViewStatType>(
     val isNetworkAvailable: Boolean,
-    var isNetworkRequest: Boolean
+    val isNetworkRequest: Boolean,
+    val shouldCanceledIfNoNetworkConnection: Boolean,
+    val shouldLoadCachedData: Boolean
 ) {
 
     private val TAG = "NetworkBoundResourse"
@@ -28,35 +30,53 @@ abstract class NetworkBoundResourse<ResponseObject, ViewStatType>(
     init {
         setjob(initJob())
         setResultValue(DataState.Loading(isLoading = true, cachedData = null))
+        if (shouldLoadCachedData) {
+            val cachedData = loadCachedData()
+            result.addSource(cachedData) { viewStat ->
+                result.removeSource(cachedData)
+                setResultValue(DataState.Loading(isLoading = true, cachedData = viewStat))
+
+            }
+        }
         if (isNetworkRequest)
             if (isNetworkAvailable) {
-                coroutineScope.launch {
-                    delay(Constants.TESTING_NETWORK_DELAY)
-                    withContext(Main) {
-                        val apiResponse = createCall()
-                        result.addSource(apiResponse) { response ->
-                            result.removeSource(apiResponse)
-                            coroutineScope.launch {
-                                handelNetWorkCall(response)
-                            }
-                        }
-                    }
-
-                }
-                GlobalScope.launch(IO) {
-                    delay(Constants.NETWORK_TIMEOUT)
-                    if (!job.isCompleted) {
-                        job.cancel(CancellationException(ErrorHandling.UNABLE_TO_RESOLVE_HOST))
-                    }
-                }
+                doNetworkRequest()
             } else
-                onErrorReturn(ErrorHandling.UNABLE_TODO_OPERATION_WO_INTERNET, true, false)
+                if (shouldCanceledIfNoNetworkConnection)
+                    onErrorReturn(ErrorHandling.UNABLE_TODO_OPERATION_WO_INTERNET, true, false)
+                else
+
+                    doCacheRequest()
         else
-            coroutineScope.launch {
-                makeCachedRequest()
+            doCacheRequest()
+    }
+
+    private fun doCacheRequest() {
+        coroutineScope.launch {
+            makeCachedRequest()
+        }
+    }
+
+    private fun doNetworkRequest() {
+        coroutineScope.launch {
+            delay(Constants.TESTING_NETWORK_DELAY)
+            withContext(Main) {
+                val apiResponse = createCall()
+                result.addSource(apiResponse) { response ->
+                    result.removeSource(apiResponse)
+                    coroutineScope.launch {
+                        handelNetWorkCall(response)
+                    }
+                }
             }
 
-
+        }
+        GlobalScope.launch(IO) {
+            delay(Constants.NETWORK_TIMEOUT)
+            if (!job.isCompleted) {
+                job.cancel(CancellationException(ErrorHandling.UNABLE_TO_RESOLVE_HOST))
+            }
+        }
     }
 
     private suspend fun handelNetWorkCall(response: GenericApiResponse<ResponseObject>?) {
@@ -139,7 +159,9 @@ abstract class NetworkBoundResourse<ResponseObject, ViewStatType>(
 
     abstract suspend fun handelApiSuccessResponse(response: GenericApiResponse.ApiSuccessResponse<ResponseObject>)
 
-    abstract fun makeCachedRequest()
+    abstract suspend fun makeCachedRequest()
+    abstract fun loadCachedData(): LiveData<ViewStatType>
+    abstract suspend fun updatedLocalDataBase(cachedObject: CachedObject?)
 
     abstract fun createCall(): LiveData<GenericApiResponse<ResponseObject>>
     abstract fun setjob(job: Job)

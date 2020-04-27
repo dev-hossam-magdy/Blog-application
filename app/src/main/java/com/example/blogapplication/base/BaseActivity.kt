@@ -1,10 +1,15 @@
 package com.example.blogapplication.base
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.hardware.input.InputManager
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethod
+import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import androidx.navigation.NavController
 import com.example.blogapplication.R
@@ -84,5 +89,10 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListene
                 View.GONE
     }
 
-
+    override fun hideKeyboard() {
+        currentFocus?.let {
+            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(it.windowToken,0)
+        }
+    }
 }

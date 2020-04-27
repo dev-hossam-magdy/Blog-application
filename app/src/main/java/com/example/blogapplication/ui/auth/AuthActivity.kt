@@ -12,11 +12,8 @@ import androidx.navigation.findNavController
 import com.example.blogapplication.R
 import com.example.blogapplication.ViewModelProviderFactory
 import com.example.blogapplication.base.BaseActivity
-import com.example.blogapplication.ui.DataState
-import com.example.blogapplication.ui.ResponseType
 import com.example.blogapplication.ui.auth.state.AuthStateEvent
 import com.example.blogapplication.ui.main.MainActivity
-import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
@@ -36,6 +33,11 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
         findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
         Log.e(TAG, "the viewModel is ${viewModel.hashCode()} ")
         subscribeObservers()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         checkPreviousAuthUser()
     }
 
@@ -93,6 +95,6 @@ class AuthActivity : BaseActivity(), NavController.OnDestinationChangedListener 
         destination: NavDestination,
         arguments: Bundle?
     ) {
-        viewModel.cancelActiveJops()
+        viewModel.cancelActiveJobs()
     }
 }

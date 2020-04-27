@@ -1,8 +1,8 @@
 package com.example.blogapplication.api.auth
 
 import androidx.lifecycle.LiveData
-import com.example.blogapplication.api.network_response.LoginResponse
-import com.example.blogapplication.api.network_response.RegistrationResponse
+import com.example.blogapplication.api.auth.network_response.LoginResponse
+import com.example.blogapplication.api.auth.network_response.RegistrationResponse
 import com.example.blogapplication.util.GenericApiResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

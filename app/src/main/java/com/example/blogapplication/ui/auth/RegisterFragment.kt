@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.blogapplication.R
-import com.example.blogapplication.base.auth.BaseAuthFragment
 import com.example.blogapplication.ui.auth.state.AuthStateEvent
 import com.example.blogapplication.ui.auth.state.RegistarationFields
 import kotlinx.android.synthetic.main.fragment_register.*

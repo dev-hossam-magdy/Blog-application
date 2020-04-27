@@ -4,13 +4,14 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.blogapplication.api.auth.OpenApiAuthService
-import com.example.blogapplication.api.network_response.LoginResponse
-import com.example.blogapplication.api.network_response.RegistrationResponse
+import com.example.blogapplication.api.auth.network_response.LoginResponse
+import com.example.blogapplication.api.auth.network_response.RegistrationResponse
 import com.example.blogapplication.di.anotaion.AuthScope
 import com.example.blogapplication.models.AccountProperties
 import com.example.blogapplication.models.AuthToken
 import com.example.blogapplication.persistence.daos.AccountPropertiesDao
 import com.example.blogapplication.persistence.daos.AuthTokenDao
+import com.example.blogapplication.repository.JobManager
 import com.example.blogapplication.repository.NetworkBoundResourse
 import com.example.blogapplication.session.SessionManager
 import com.example.blogapplication.ui.DataState
@@ -31,14 +32,9 @@ class AuthRepository @Inject constructor(
     private val sessionManager: SessionManager,
     private val sharedPreferences: SharedPreferences,
     private val sharedPreferencesEditor: SharedPreferences.Editor
-) {
+):JobManager("AuthRepository") {
     val TAG = "AuthRepository"
-    private var repoJob: Job? = null
 
-    init {
-        Log.e(TAG, "it is work ${sessionManager.hashCode()}")
-
-    }
 
     fun attempLogin(email: String, password: String): LiveData<DataState<AuthViewState>> {
         val loginFieldsErrors = LoginFields(email, password).isValidForLogin()
@@ -46,10 +42,13 @@ class AuthRepository @Inject constructor(
             return returnErrorResponse(loginFieldsErrors, ResponseType.Dialog())
 
         return object :
-            NetworkBoundResourse<LoginResponse, AuthViewState>(
+            NetworkBoundResourse<LoginResponse, Any,AuthViewState>(
                 sessionManager.isConnectedToTheInternet(),
-                true
+                true,
+                true,
+                false
             ) {
+
             override suspend fun handelApiSuccessResponse(response: GenericApiResponse.ApiSuccessResponse<LoginResponse>) {
                 Log.e(TAG, "handelApiSucessResponse.... ${response}")
                 if (response.body.response.equals(ErrorHandling.GENERIC_AUTH_ERROR))
@@ -94,12 +93,19 @@ class AuthRepository @Inject constructor(
             }
 
             override fun setjob(job: Job) {
-                repoJob?.cancel()
-                repoJob = job
+                addJob("attempLogin",job)
             }
 
             // not needed in this case
-            override fun makeCachedRequest() {
+            override suspend fun makeCachedRequest() {
+
+            }
+
+            override fun loadCachedData(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updatedLocalDataBase(cachedObject: Any?) {
 
             }
         }.getResultAsLiveData()
@@ -118,9 +124,11 @@ class AuthRepository @Inject constructor(
         if (!registrationFieldsError.equals(RegistarationFields.RegistrationError.none()))
             return returnErrorResponse(registrationFieldsError, ResponseType.Dialog())
         return object :
-            NetworkBoundResourse<RegistrationResponse, AuthViewState>(
+            NetworkBoundResourse<RegistrationResponse, Any,AuthViewState>(
                 sessionManager.isConnectedToTheInternet(),
-                true
+                true,
+                true,
+                false
             ) {
             override suspend fun handelApiSuccessResponse(response: GenericApiResponse.ApiSuccessResponse<RegistrationResponse>) {
                 Log.e(TAG, "handelApiSucessResponse.... ${response}")
@@ -160,12 +168,20 @@ class AuthRepository @Inject constructor(
             }
 
             override fun setjob(job: Job) {
-                cancelActivesJob()
-                repoJob = job
+                addJob("attempRegistration",job)
             }
 
+
             // not needed in this case
-            override fun makeCachedRequest() {
+            override suspend fun makeCachedRequest() {
+
+            }
+
+            override fun loadCachedData(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updatedLocalDataBase(cachedObject: Any?) {
 
             }
         }.getResultAsLiveData()
@@ -197,8 +213,10 @@ class AuthRepository @Inject constructor(
             return returnNoTokenFound()
         }
 
-        return object : NetworkBoundResourse<Void, AuthViewState>(
+        return object : NetworkBoundResourse<Void, Any,AuthViewState>(
             sessionManager.isConnectedToTheInternet(),
+            false,
+            false,
             false
         ) {
             // not used in this case
@@ -207,7 +225,7 @@ class AuthRepository @Inject constructor(
             }
 
 
-            override fun makeCachedRequest() {
+            override suspend fun makeCachedRequest() {
                 Log.e(TAG, "makeCachedRequest:")
                 accountPropertiesDao.searchByEmail(previousUserEmail).let { accountProperties ->
                     accountProperties?.let { accountProperties ->
@@ -247,9 +265,19 @@ class AuthRepository @Inject constructor(
                 return AbsentLiveData.create()
             }
 
+
+
+            override fun loadCachedData(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updatedLocalDataBase(cachedObject: Any?) {
+
+            }
+
             override fun setjob(job: Job) {
-                repoJob?.cancel()
-                repoJob = job
+                addJob("checkPreviousAuthUser",job)
+
             }
         }.getResultAsLiveData()
     }
@@ -281,11 +309,6 @@ class AuthRepository @Inject constructor(
             AuthToken(accountPk, token)
         )
         return result
-    }
-
-    fun cancelActivesJob() {
-        Log.e(TAG, "cancelActivesJob....")
-        repoJob?.cancel()
     }
 
 

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 
 import com.example.blogapplication.R
-import com.example.blogapplication.base.auth.BaseAuthFragment
 import kotlinx.android.synthetic.main.fragment_launcher.*
 
 
