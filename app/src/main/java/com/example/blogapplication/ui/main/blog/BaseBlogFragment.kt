@@ -6,22 +6,20 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.ActivityNavigator
-import androidx.navigation.fragment.findNavController
 import com.example.blogapplication.R
 import com.example.blogapplication.ViewModelProviderFactory
 import com.example.blogapplication.ui.DataStateChangesListener
 import com.example.blogapplication.ui.main.BaseMainFragment
-import dagger.android.support.DaggerFragment
+import com.example.blogapplication.ui.main.blog.viewmodels.BlogPostViewModel
 import javax.inject.Inject
 
 abstract class BaseBlogFragment : BaseMainFragment(){
 
-    val TAG: String = "BaseBlogFragment"
+    abstract val TAG: String
 
     @Inject
     lateinit var factory: ViewModelProviderFactory
-    lateinit var viewModel:BlogPostViewModel
+    lateinit var viewModel: BlogPostViewModel
 
     lateinit var stateChangeListener: DataStateChangesListener
 

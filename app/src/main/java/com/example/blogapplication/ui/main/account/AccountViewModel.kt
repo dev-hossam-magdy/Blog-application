@@ -8,6 +8,7 @@ import com.example.blogapplication.ui.BaseViewModel
 import com.example.blogapplication.ui.DataState
 import com.example.blogapplication.ui.main.account.state.AccountStateEvent
 import com.example.blogapplication.ui.main.account.state.AccountViewState
+import com.example.blogapplication.ui.main.blog.state.BlogPostViewState
 import com.example.blogapplication.util.AbsentLiveData
 import javax.inject.Inject
 
@@ -61,7 +62,15 @@ class AccountViewModel @Inject constructor(
             }
             is AccountStateEvent.None -> {
 
-                AbsentLiveData.create()
+                object :LiveData<DataState<AccountViewState>>(){
+                    override fun onActive() {
+                        super.onActive()
+                        value = DataState.Data(
+                            null,
+                            null
+                        )
+                    }
+                }
             }
         }
 
@@ -70,7 +79,7 @@ class AccountViewModel @Inject constructor(
         if (update.accountProperties == accountProperties)
             return
         update.accountProperties = accountProperties
-        _viewState.value = update
+        setViewState(update)
     }
 
     fun logout() {

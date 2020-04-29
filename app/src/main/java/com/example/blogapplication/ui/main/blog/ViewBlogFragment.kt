@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 
 class ViewBlogFragment : BaseBlogFragment() {
-
+    override val TAG: String
+        get() = "ViewBlogFragment"
     @Inject
     lateinit var requestManager: RequestManager
     override fun onCreateView(

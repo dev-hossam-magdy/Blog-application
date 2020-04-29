@@ -47,7 +47,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListene
     }
 
     private fun handelStateData(response: Event<Response>?, isErrorEvent: Boolean) {
-        Log.e(TAG, "handelStateError:")
+        Log.e(TAG, "handelStateError: ${response?.getContentIfNotHandled()?.message}")
         response?.getContentIfNotHandled()?.let { response ->
             displayProgessBar(false)
 

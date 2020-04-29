@@ -12,7 +12,8 @@ import com.example.blogapplication.R
  * A simple [Fragment] subclass.
  */
 class UpdateBlogFragment : BaseBlogFragment() {
-
+    override val TAG: String
+        get() = "UpdateBlogFragment"
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

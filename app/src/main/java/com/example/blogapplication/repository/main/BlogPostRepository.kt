@@ -13,6 +13,7 @@ import com.example.blogapplication.repository.NetworkBoundResourse
 import com.example.blogapplication.session.SessionManager
 import com.example.blogapplication.ui.DataState
 import com.example.blogapplication.ui.main.blog.state.BlogPostViewState
+import com.example.blogapplication.util.Constants
 import com.example.blogapplication.util.GenericApiResponse
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -30,7 +31,8 @@ class BlogPostRepository @Inject constructor(
 
     fun searchBlogPost(
         authToken: AuthToken,
-        query: String
+        query: String,
+        pageNumber:Int
     ): LiveData<DataState<BlogPostViewState>> {
         return object :
             NetworkBoundResourse<BlogListSearchResponse, List<BlogPost>, BlogPostViewState>(
@@ -46,21 +48,29 @@ class BlogPostRepository @Inject constructor(
 
             override suspend fun makeCachedRequest() {
                 withContext(Main){
-                    result.addSource(loadCachedData()){ BlogPostViewState ->
-                        onCompleteJob(DataState.Data(BlogPostViewState,null))
+                    result.addSource(loadCachedData()){ blogPostViewState ->
+                        blogPostViewState.blogFields.isQueryInProgress = false
+                        if (blogPostViewState.blogFields.blogList.size < pageNumber * Constants.PAGINATION_PAGE_SIZE)
+                            blogPostViewState.blogFields.isQueryExhausted = true
+                        onCompleteJob(DataState.Data(blogPostViewState,null))
                     }
                 }
 
             }
 
             override fun loadCachedData(): LiveData<BlogPostViewState> =
-                blogPostDao.getAllBlogPosts().switchMap { blogPosts ->
+                blogPostDao.getAllBlogPosts(
+                    page = pageNumber,
+                    query = query
+                ).switchMap { blogPosts ->
                     return@switchMap object : LiveData<BlogPostViewState>() {
                         override fun onActive() {
                             super.onActive()
                             value = BlogPostViewState(
                                 blogFields = BlogPostViewState.BlogFields(
-                                    blogList = blogPosts, searchQuery = query
+                                    blogList = blogPosts,
+                                    searchQuery = query,
+                                    isQueryInProgress = true
                                 )
                             )
                         }
@@ -81,7 +91,8 @@ class BlogPostRepository @Inject constructor(
             override fun createCall(): LiveData<GenericApiResponse<BlogListSearchResponse>> =
                 openAPiMainService.searchListBlogPost(
                     authorization = "Token ${authToken.token}",
-                    query = query
+                    query = query,
+                    page = pageNumber
                 )
 
 

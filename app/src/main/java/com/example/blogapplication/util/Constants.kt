@@ -1,6 +1,8 @@
 package com.example.blogapplication.util
 
 object Constants {
+    const val DEFULT_PAGE_NUMBER = 1
+    const val PAGINATION_PAGE_SIZE = 10
     const val BASE_URL = "https://open-api.xyz/api/"
     const val ERROR_UNKNOWN = "ERROR UNKNOWN"
     const val PASSWORD_RESET_URL: String = "https://open-api.xyz/password_reset/"

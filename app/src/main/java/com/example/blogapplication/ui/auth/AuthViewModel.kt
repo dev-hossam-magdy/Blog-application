@@ -70,7 +70,7 @@ class AuthViewModel @Inject constructor(
         if (update.registrationFields == registarationFields)
             return
         update.registrationFields = registarationFields
-        _viewState.value = update
+        setViewState(update)
     }
 
     fun setLoginFields(loginFields: LoginFields) {
@@ -78,7 +78,7 @@ class AuthViewModel @Inject constructor(
         if (update.loginFields == loginFields)
             return
         update.loginFields = loginFields
-        _viewState.value = update
+        setViewState(update)
     }
 
     fun setAuthToken(authToken: AuthToken) {
@@ -87,7 +87,7 @@ class AuthViewModel @Inject constructor(
         if (update.authToken == authToken)
             return
         update.authToken = authToken
-        _viewState.value = update
+        setViewState(update)
     }
 
     fun cancelActiveJobs(){

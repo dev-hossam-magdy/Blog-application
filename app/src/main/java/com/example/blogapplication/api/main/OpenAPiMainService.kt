@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.example.blogapplication.api.GenericResponse
 import com.example.blogapplication.api.main.response.BlogListSearchResponse
 import com.example.blogapplication.models.AccountProperties
+import com.example.blogapplication.util.Constants
 import com.example.blogapplication.util.GenericApiResponse
 import retrofit2.http.*
 
@@ -34,7 +35,8 @@ interface OpenAPiMainService {
     @GET("blog/list")
     fun searchListBlogPost(
         @Header("Authorization") authorization: String,
-        @Query("search") query: String
+        @Query("search") query: String,
+        @Query("page") page:Int
     ): LiveData<GenericApiResponse<BlogListSearchResponse>>
 
 }
