@@ -27,7 +27,7 @@ fun BlogPostViewModel.setBlogPost(blogPost: BlogPost) {
 
 }
 
-fun BlogPostViewModel.setAuthorOfBlogPost(isAuthorOfBlogPost: Boolean){
+fun BlogPostViewModel.setAuthorOfBlogPost(isAuthorOfBlogPost: Boolean) {
     val update = getCurrenViewStateOrNew()
     if (update.viewBlogFields.isAuthorOfBlogPost == isAuthorOfBlogPost)
         return
@@ -35,15 +35,35 @@ fun BlogPostViewModel.setAuthorOfBlogPost(isAuthorOfBlogPost: Boolean){
     setViewState(update)
 }
 
-fun BlogPostViewModel.setIsQueryInProgress(isQueryInProgress:Boolean){
+fun BlogPostViewModel.setIsQueryInProgress(isQueryInProgress: Boolean) {
     val update = getCurrenViewStateOrNew()
 
     update.blogFields.isQueryInProgress = isQueryInProgress
     setViewState(update)
 }
-fun BlogPostViewModel.setIsQueryExhausted(isQueryExhausted:Boolean){
+
+fun BlogPostViewModel.setIsQueryExhausted(isQueryExhausted: Boolean) {
     val update = getCurrenViewStateOrNew()
 
     update.blogFields.isQueryExhausted = isQueryExhausted
     setViewState(update)
+}
+
+fun BlogPostViewModel.setBlogFilter(filter: String?) {
+    filter?.let {
+        val update = getCurrenViewStateOrNew()
+        if (update.blogFields.filter.equals(filter))
+            return
+        update.blogFields.filter = filter
+        setViewState(update)
+    }
+}
+
+fun BlogPostViewModel.setBlogOrder(order: String) {
+    val update = getCurrenViewStateOrNew()
+    if (update.blogFields.order.equals(order))
+        return
+    update.blogFields.order = order
+    setViewState(update)
+
 }

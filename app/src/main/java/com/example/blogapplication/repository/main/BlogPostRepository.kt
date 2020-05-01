@@ -8,6 +8,7 @@ import com.example.blogapplication.api.main.response.BlogListSearchResponse
 import com.example.blogapplication.models.AuthToken
 import com.example.blogapplication.models.BlogPost
 import com.example.blogapplication.persistence.daos.BlogPostDao
+import com.example.blogapplication.persistence.daos.returnOrderedBlogQuery
 import com.example.blogapplication.repository.JobManager
 import com.example.blogapplication.repository.NetworkBoundResourse
 import com.example.blogapplication.session.SessionManager
@@ -32,6 +33,7 @@ class BlogPostRepository @Inject constructor(
     fun searchBlogPost(
         authToken: AuthToken,
         query: String,
+        filterAndOrder:String,
         pageNumber:Int
     ): LiveData<DataState<BlogPostViewState>> {
         return object :
@@ -59,9 +61,10 @@ class BlogPostRepository @Inject constructor(
             }
 
             override fun loadCachedData(): LiveData<BlogPostViewState> =
-                blogPostDao.getAllBlogPosts(
+                blogPostDao.returnOrderedBlogQuery(
+                    query = query,
                     page = pageNumber,
-                    query = query
+                    filterAndOrder = filterAndOrder
                 ).switchMap { blogPosts ->
                     return@switchMap object : LiveData<BlogPostViewState>() {
                         override fun onActive() {
@@ -92,7 +95,8 @@ class BlogPostRepository @Inject constructor(
                 openAPiMainService.searchListBlogPost(
                     authorization = "Token ${authToken.token}",
                     query = query,
-                    page = pageNumber
+                    page = pageNumber,
+                    ordering = filterAndOrder
                 )
 
 

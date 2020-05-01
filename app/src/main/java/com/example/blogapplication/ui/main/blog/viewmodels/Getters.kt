@@ -8,3 +8,9 @@ fun BlogPostViewModel.getsQueryInProgress():Boolean =
 
 fun BlogPostViewModel.getIsQueryExhausted():Boolean =
     getCurrenViewStateOrNew().blogFields.isQueryExhausted
+
+fun BlogPostViewModel.getFilter():String =
+    getCurrenViewStateOrNew().blogFields.filter
+
+fun BlogPostViewModel.getOrder():String =
+    getCurrenViewStateOrNew().blogFields.order

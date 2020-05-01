@@ -3,7 +3,7 @@ package com.example.blogapplication.di.modules.main
 import com.example.blogapplication.ui.main.account.AccountFragment
 import com.example.blogapplication.ui.main.account.ChangePasswordFragment
 import com.example.blogapplication.ui.main.account.UpdateAccountFragment
-import com.example.blogapplication.ui.main.blog.BlogFragment
+import com.example.blogapplication.ui.main.blog_fragment.BlogFragment
 import com.example.blogapplication.ui.main.blog.UpdateBlogFragment
 import com.example.blogapplication.ui.main.blog.ViewBlogFragment
 import com.example.blogapplication.ui.main.create_blog.CreateBlogFragment
