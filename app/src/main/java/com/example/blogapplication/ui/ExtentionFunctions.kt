@@ -1,5 +1,6 @@
 package com.example.blogapplication.ui
 
+import android.app.Activity
 import android.content.Context
 import android.icu.text.CaseMap
 import android.widget.Toast
@@ -10,7 +11,7 @@ import com.google.android.material.dialog.MaterialDialogs
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun Context.displayDialogMessage(@StringRes titleResurse:Int,msg: String) {
+fun Activity.displayDialogMessage(@StringRes titleResurse: Int, msg: String) {
     MaterialDialog(this)
         .show {
             title(titleResurse)
@@ -20,12 +21,40 @@ fun Context.displayDialogMessage(@StringRes titleResurse:Int,msg: String) {
 
 }
 
-fun Context.displayToastMessage( msg: String) {
+fun Activity.displayToastMessage(msg: String) {
     Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
 }
 
+fun Activity.displayInfoDialog(message: String) {
+    MaterialDialog(this)
+        .show {
+            title(R.string.text_info)
+            message(text = message)
+            positiveButton(R.string.text_ok)
+        }
 
-fun Long.convertLongToStringDate(): String{
+}
+
+fun Activity.aryYouSureDialog(message: String, callback: AreYouSureCallback){
+    MaterialDialog(this).show {
+        title(R.string.are_you_sure)
+        message(text = message)
+        negativeButton(R.string.text_cancel) {
+            callback.cancel()
+        }
+        positiveButton(R.string.text_yes) {
+            callback.proceed()
+        }
+
+    }
+}
+
+interface AreYouSureCallback{
+    fun proceed()
+    fun cancel()
+}
+
+fun Long.convertLongToStringDate(): String {
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     try {
         val date = sdf.format(Date(this))
@@ -36,7 +65,7 @@ fun Long.convertLongToStringDate(): String{
 }
 
 
-fun String.convertServerStringDateToLong(): Long{
+fun String.convertServerStringDateToLong(): Long {
     var stringDate = this.removeRange(this.indexOf("T") until this.length)
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     try {

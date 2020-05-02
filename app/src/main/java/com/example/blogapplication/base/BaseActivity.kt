@@ -21,7 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListener {
+abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListener , UICommunicationListener {
 
     abstract val TAG: String
     abstract val progressBar:ProgressBar
@@ -94,5 +94,20 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListene
             val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputManager.hideSoftInputFromWindow(it.windowToken,0)
         }
+    }
+
+    override fun onUIMessageReceived(uiMessage: UIMessage) {
+        when(uiMessage.uiMessageType){
+            is UIMessageType.AreYouSureDialog->
+                aryYouSureDialog(uiMessage.message,uiMessage.uiMessageType.callback)
+
+            is UIMessageType.Dialog->
+                displayInfoDialog(uiMessage.message)
+            is UIMessageType.Toast ->
+                displayToastMessage(uiMessage.message)
+            is UIMessageType.None ->
+                Log.e(TAG, "UIMessageType.None : ${uiMessage.message}")
+        }
+
     }
 }

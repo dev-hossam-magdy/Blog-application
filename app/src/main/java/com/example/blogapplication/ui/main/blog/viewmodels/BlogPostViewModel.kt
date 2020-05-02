@@ -1,9 +1,7 @@
 package com.example.blogapplication.ui.main.blog.viewmodels
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.LiveData
-import com.bumptech.glide.RequestManager
 import com.example.blogapplication.models.BlogPost
 import com.example.blogapplication.persistence.daos.BlogQueryUtils
 import com.example.blogapplication.repository.main.BlogPostRepository
@@ -14,8 +12,10 @@ import com.example.blogapplication.ui.main.blog.state.BlogPostStateEvent
 import com.example.blogapplication.ui.main.blog.state.BlogPostViewState
 import com.example.blogapplication.util.AbsentLiveData
 import com.example.blogapplication.util.PreferenceKeys
-import java.nio.ByteOrder
-import java.util.logging.Filter
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 class BlogPostViewModel @Inject constructor(
@@ -61,7 +61,13 @@ class BlogPostViewModel @Inject constructor(
 
             }
             is BlogPostStateEvent.CheckAuthorOfBlogPost -> {
-                AbsentLiveData.create()
+                sessionManager.cachedToken.value?.let { authToken ->
+                    blogPostRepository.isAuthorOfBlogPost(
+                            authToken = authToken,
+                            slug = getSlug()
+                        )
+
+                } ?:AbsentLiveData.create()
             }
             is BlogPostStateEvent.None -> {
                 object : LiveData<DataState<BlogPostViewState>>() {
@@ -74,7 +80,29 @@ class BlogPostViewModel @Inject constructor(
                     }
                 }
             }
+
+            is BlogPostStateEvent.DeleteBlogPostEvent ->{
+                sessionManager.cachedToken.value?.let { authToken ->
+                    blogPostRepository.deleteBlogPost(authToken,getBlogPost())
+                }?:AbsentLiveData.create()
+
+            }
+            is BlogPostStateEvent.UpdatedBlogPostEvent ->{
+                sessionManager.cachedToken.value?.let {authToken ->
+                    val title = stateEvent.title.toRequestBody("text/plain".toMediaTypeOrNull())
+                    val body = stateEvent.body.toRequestBody("text/plain".toMediaTypeOrNull())
+                    blogPostRepository.updateBlogPost(
+                        authToken = authToken,
+                        image = stateEvent.image,
+                        title = title,
+                        body = body,
+                        slug = getSlug()
+                    )
+                }?:AbsentLiveData.create()
+            }
+
         }
+
 
 
     fun cancelActiveJobs() {
@@ -96,6 +124,15 @@ class BlogPostViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
+    }
+
+    fun removeDeletedBlogPost() {
+        val update = getCurrenViewStateOrNew()
+        val list = update.blogFields.blogList.dropWhile { blogPost ->
+            blogPost == getBlogPost()
+        }
+
+        setBlogList(list)
     }
 
 

@@ -1,5 +1,7 @@
 package com.example.blogapplication.ui.main.blog.viewmodels
 
+import android.icu.text.CaseMap
+import android.net.Uri
 import com.example.blogapplication.models.BlogPost
 
 fun BlogPostViewModel.setQuery(query: String) {
@@ -27,7 +29,7 @@ fun BlogPostViewModel.setBlogPost(blogPost: BlogPost) {
 
 }
 
-fun BlogPostViewModel.setAuthorOfBlogPost(isAuthorOfBlogPost: Boolean) {
+fun BlogPostViewModel.setIsAuthorOfBlogPost(isAuthorOfBlogPost: Boolean) {
     val update = getCurrenViewStateOrNew()
     if (update.viewBlogFields.isAuthorOfBlogPost == isAuthorOfBlogPost)
         return
@@ -65,5 +67,19 @@ fun BlogPostViewModel.setBlogOrder(order: String) {
         return
     update.blogFields.order = order
     setViewState(update)
-
 }
+
+fun BlogPostViewModel.setUpdatedBlogFields(
+    title: String?,
+    imageUri: Uri?,
+    body:String?
+){
+    val update = getCurrenViewStateOrNew()
+    val updateBlogFields = update.updateBlogFields
+    title?.let { updateBlogFields.updatedBlogTitle = it }
+    imageUri?.let { updateBlogFields.updatedImageUri = it }
+    body?.let { updateBlogFields.updatedBlogBody = it }
+    update.updateBlogFields = updateBlogFields
+    setViewState(update)
+}
+

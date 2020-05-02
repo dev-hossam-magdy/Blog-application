@@ -1,6 +1,5 @@
 package com.example.blogapplication.repository
 
-import android.net.NetworkRequest
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -28,7 +27,7 @@ abstract class NetworkBoundResourse<ResponseObject, CachedObject, ViewStatType>(
     protected lateinit var coroutineScope: CoroutineScope
 
     init {
-        setjob(initJob())
+        setJob(initJob())
         setResultValue(DataState.Loading(isLoading = true, cachedData = null))
         if (shouldLoadCachedData) {
             val cachedData = loadCachedData()
@@ -53,7 +52,7 @@ abstract class NetworkBoundResourse<ResponseObject, CachedObject, ViewStatType>(
 
     private fun doCacheRequest() {
         coroutineScope.launch {
-            makeCachedRequest()
+            makeCachedRequestAndReturn()
         }
     }
 
@@ -157,13 +156,19 @@ abstract class NetworkBoundResourse<ResponseObject, CachedObject, ViewStatType>(
 
     fun getResultAsLiveData() = result as LiveData<DataState<ViewStatType>>
 
+    // fun that handel api response if it success
     abstract suspend fun handelApiSuccessResponse(response: GenericApiResponse.ApiSuccessResponse<ResponseObject>)
 
-    abstract suspend fun makeCachedRequest()
+    // single way of truth always load data from database
+    abstract suspend fun makeCachedRequestAndReturn()
+    // load data from cache
     abstract fun loadCachedData(): LiveData<ViewStatType>
+    // update local data base
     abstract suspend fun updatedLocalDataBase(cachedObject: CachedObject?)
 
+    // create api call response
     abstract fun createCall(): LiveData<GenericApiResponse<ResponseObject>>
-    abstract fun setjob(job: Job)
+    // set jobs to cancel it
+    abstract fun setJob(job: Job)
 
 }

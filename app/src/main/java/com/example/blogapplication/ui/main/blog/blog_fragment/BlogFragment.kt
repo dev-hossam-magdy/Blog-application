@@ -1,4 +1,4 @@
-package com.example.blogapplication.ui.main.blog_fragment
+package com.example.blogapplication.ui.main.blog.blog_fragment
 
 import android.app.SearchManager
 import android.content.Context

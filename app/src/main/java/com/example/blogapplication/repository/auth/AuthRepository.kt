@@ -92,12 +92,12 @@ class AuthRepository @Inject constructor(
                 return openApiAuthService.login(email, password)
             }
 
-            override fun setjob(job: Job) {
+            override fun setJob(job: Job) {
                 addJob("attempLogin",job)
             }
 
             // not needed in this case
-            override suspend fun makeCachedRequest() {
+            override suspend fun makeCachedRequestAndReturn() {
 
             }
 
@@ -167,13 +167,13 @@ class AuthRepository @Inject constructor(
                 return openApiAuthService.register(email, username, password, confirmPassword)
             }
 
-            override fun setjob(job: Job) {
+            override fun setJob(job: Job) {
                 addJob("attempRegistration",job)
             }
 
 
             // not needed in this case
-            override suspend fun makeCachedRequest() {
+            override suspend fun makeCachedRequestAndReturn() {
 
             }
 
@@ -225,7 +225,7 @@ class AuthRepository @Inject constructor(
             }
 
 
-            override suspend fun makeCachedRequest() {
+            override suspend fun makeCachedRequestAndReturn() {
                 Log.e(TAG, "makeCachedRequest:")
                 accountPropertiesDao.searchByEmail(previousUserEmail).let { accountProperties ->
                     accountProperties?.let { accountProperties ->
@@ -275,7 +275,7 @@ class AuthRepository @Inject constructor(
 
             }
 
-            override fun setjob(job: Job) {
+            override fun setJob(job: Job) {
                 addJob("checkPreviousAuthUser",job)
 
             }

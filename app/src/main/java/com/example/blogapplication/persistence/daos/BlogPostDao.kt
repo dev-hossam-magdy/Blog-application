@@ -1,10 +1,8 @@
 package com.example.blogapplication.persistence.daos
 
+import android.media.Image
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.blogapplication.models.BlogPost
 import com.example.blogapplication.util.Constants
 import com.example.blogapplication.util.Constants.PAGINATION_PAGE_SIZE
@@ -17,6 +15,19 @@ interface BlogPostDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(blogPost: List<BlogPost>)
+
+    @Delete
+    suspend fun deleteBlogPos(blogPost: BlogPost)
+
+    @Query("""
+        UPDATE blog_post SET 
+        title = :title , 
+        body = :body ,
+        image =:image
+        WHERE pk = :pk
+        
+    """)
+    fun updateBlogPost(pk:Int , title: String , body:String, image: String)
 
     @Query(
         """

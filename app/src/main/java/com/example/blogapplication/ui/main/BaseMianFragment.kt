@@ -17,7 +17,7 @@ abstract class BaseMainFragment :DaggerFragment(){
         )
     }
 
-    protected fun navigateToDestination(destination: Int){
+    protected open fun navigateToDestination(destination: Int){
         findNavController().navigate(destination)
     }
 

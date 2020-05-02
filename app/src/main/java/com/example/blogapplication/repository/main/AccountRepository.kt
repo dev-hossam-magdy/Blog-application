@@ -1,6 +1,5 @@
 package com.example.blogapplication.repository.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.switchMap
 import com.example.blogapplication.api.GenericResponse
@@ -62,10 +61,10 @@ class AccountRepository @Inject constructor(
             override suspend fun handelApiSuccessResponse(response: GenericApiResponse.ApiSuccessResponse<AccountProperties>) {
 
                 updatedLocalDataBase(response.body)
-                makeCachedRequest()
+                makeCachedRequestAndReturn()
             }
 
-            override suspend fun makeCachedRequest() {
+            override suspend fun makeCachedRequestAndReturn() {
                 withContext(Main) {
                     result.addSource(loadCachedData()) {
                         onCompleteJob(
@@ -82,7 +81,7 @@ class AccountRepository @Inject constructor(
             override fun createCall(): LiveData<GenericApiResponse<AccountProperties>> =
                 openAPiMainService.getAccountProperties("Token ${authToken.token}")
 
-            override fun setjob(job: Job) {
+            override fun setJob(job: Job) {
                 addJob("getAccountProperties",job)
             }
         }.getResultAsLiveData()
@@ -116,7 +115,7 @@ class AccountRepository @Inject constructor(
             }
 
             // not needed in this case
-            override suspend fun makeCachedRequest() {
+            override suspend fun makeCachedRequestAndReturn() {
                 //TODO("Not yet implemented")
             }
 
@@ -143,7 +142,7 @@ class AccountRepository @Inject constructor(
                 )
             }
 
-            override fun setjob(job: Job) {
+            override fun setJob(job: Job) {
                addJob("saveAccountProperties",job)
             }
         }.getResultAsLiveData()
@@ -174,7 +173,7 @@ class AccountRepository @Inject constructor(
             }
 
             // not needed in this case
-            override suspend fun makeCachedRequest() {
+            override suspend fun makeCachedRequestAndReturn() {
             }
 
             // not needed in this case
@@ -196,7 +195,7 @@ class AccountRepository @Inject constructor(
                 )
 
 
-            override fun setjob(job: Job) {
+            override fun setJob(job: Job) {
                 addJob("changePassword",job)
             }
         }.getResultAsLiveData()

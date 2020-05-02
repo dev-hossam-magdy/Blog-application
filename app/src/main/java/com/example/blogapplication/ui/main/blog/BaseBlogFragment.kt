@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.blogapplication.R
 import com.example.blogapplication.ViewModelProviderFactory
 import com.example.blogapplication.ui.DataStateChangesListener
+import com.example.blogapplication.ui.UICommunicationListener
 import com.example.blogapplication.ui.main.BaseMainFragment
 import com.example.blogapplication.ui.main.blog.viewmodels.BlogPostViewModel
 import javax.inject.Inject
@@ -23,12 +24,20 @@ abstract class BaseBlogFragment : BaseMainFragment(){
 
     lateinit var stateChangeListener: DataStateChangesListener
 
+    lateinit var uiCommunicationListener: UICommunicationListener
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try{
             stateChangeListener = context as DataStateChangesListener
         }catch(e: ClassCastException){
             Log.e(TAG, "$context must implement DataStateChangeListener" )
+        }
+
+        try{
+            uiCommunicationListener = context as UICommunicationListener
+        }catch(e: ClassCastException){
+            Log.e(TAG, "$context must implement UICommunicationListener" )
         }
     }
 

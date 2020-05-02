@@ -1,11 +1,16 @@
 package com.example.blogapplication.api.main
 
+import android.media.Image
 import androidx.lifecycle.LiveData
+import androidx.room.Delete
 import com.example.blogapplication.api.GenericResponse
+import com.example.blogapplication.api.main.response.BlogCreateUpdateResponse
 import com.example.blogapplication.api.main.response.BlogListSearchResponse
 import com.example.blogapplication.models.AccountProperties
 import com.example.blogapplication.util.Constants
 import com.example.blogapplication.util.GenericApiResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface OpenAPiMainService {
@@ -39,5 +44,27 @@ interface OpenAPiMainService {
         @Query("ordering") ordering:String,
         @Query("page") page:Int
     ): LiveData<GenericApiResponse<BlogListSearchResponse>>
+
+    @GET("blog/{slug}/is_author")
+    fun isAuthorOfBlogPost(
+        @Header("Authorization") authorization: String,
+        @Path("slug") slug :String
+    ):LiveData<GenericApiResponse<GenericResponse>>
+
+    @DELETE("blog/{slug}/delete")
+    fun deleteBlogPost(
+        @Header("Authorization") authorization: String,
+        @Path("slug") slug :String
+    ):LiveData<GenericApiResponse<GenericResponse>>
+
+    @Multipart
+    @PUT("blog/{slug}/update")
+    fun updateBlogPost(
+        @Header("Authorization") authorization: String,
+        @Path("slug") slug :String,
+        @Part("title") title:RequestBody,
+        @Part("body") body:RequestBody,
+        @Part image:MultipartBody.Part?
+    ):LiveData<GenericApiResponse<BlogCreateUpdateResponse>>
 
 }

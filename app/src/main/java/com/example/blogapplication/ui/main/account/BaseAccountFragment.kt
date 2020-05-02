@@ -43,10 +43,12 @@ abstract class BaseAccountFragment : BaseMainFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupActionBarWithNavController(activity as AppCompatActivity, R.id.accountFragment)
 
-        cancelActiveJobs()
+
         viewModel = activity?.run {
             ViewModelProvider(this, factory).get(AccountViewModel::class.java)
         } ?: throw Exception("Invalid activity")
+
+        cancelActiveJobs()
     }
 
     override fun cancelActiveJobs(){
