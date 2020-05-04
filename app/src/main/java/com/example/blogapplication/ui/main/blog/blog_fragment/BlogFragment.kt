@@ -84,10 +84,10 @@ class BlogFragment : BaseBlogFragment() {
                         TAG,
                         "the data is coming viewState.observe ${blogPostList.get(blogPostList.size - 1).pk}"
                     )
-                recyclerViewAdapter.submitList(
-                    blogPostList,
-                    blogPostViewState.blogFields.isQueryExhausted
-                )
+                recyclerViewAdapter.apply {
+                    preloadGlideImages(blogPostList)
+                    submitList(blogPostList, blogPostViewState.blogFields.isQueryExhausted)
+                }
 
             }
 

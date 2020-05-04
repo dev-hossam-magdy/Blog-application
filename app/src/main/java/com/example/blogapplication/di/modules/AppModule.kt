@@ -59,13 +59,6 @@ object AppModule {
         Glide.with(application)
             .setDefaultRequestOptions(requestOptions)
 
-//    @Singleton
-//    @Provides
-//    fun provideSessionManager(authTokenDao: AuthTokenDao,application: Application): SessionManager =
-//        SessionManager(
-//            authTokenDao =authTokenDao ,
-//            application = application
-//        )
 
     @Singleton
     @Provides

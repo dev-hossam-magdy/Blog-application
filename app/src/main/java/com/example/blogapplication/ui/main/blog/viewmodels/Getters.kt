@@ -1,5 +1,6 @@
 package com.example.blogapplication.ui.main.blog.viewmodels
 
+import android.net.Uri
 import com.example.blogapplication.models.BlogPost
 
 fun BlogPostViewModel.getPageNumber():Int =
@@ -28,3 +29,6 @@ fun BlogPostViewModel.getBlogPost() =
 
 private fun getDummyBlogPost(): BlogPost =
     BlogPost(-1,"","","","",-1,"")
+
+fun BlogPostViewModel.getUpdatedBlogUri():Uri?=
+    getCurrenViewStateOrNew().updateBlogFields.updatedImageUri

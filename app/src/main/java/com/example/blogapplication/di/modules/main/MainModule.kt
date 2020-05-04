@@ -9,6 +9,7 @@ import com.example.blogapplication.persistence.daos.AccountPropertiesDao
 import com.example.blogapplication.persistence.daos.BlogPostDao
 import com.example.blogapplication.repository.main.AccountRepository
 import com.example.blogapplication.repository.main.BlogPostRepository
+import com.example.blogapplication.repository.main.CreateBlogRepository
 import com.example.blogapplication.session.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -51,5 +52,18 @@ class MainModule {
     @Provides
     fun provideBlogPostAdapter(requestManager: RequestManager): BlogPostAdapter =
         BlogPostAdapter(requestManager)
+
+    @MainScope
+    @Provides
+    fun provideCreateBlogRepository(
+        sessionManager: SessionManager,
+        openAPiMainService: OpenAPiMainService,
+        blogPostDao: BlogPostDao
+    ): CreateBlogRepository =
+        CreateBlogRepository(
+            sessionManager = sessionManager,
+            blogPostDao = blogPostDao,
+            openAPiMainService = openAPiMainService
+        )
 
 }

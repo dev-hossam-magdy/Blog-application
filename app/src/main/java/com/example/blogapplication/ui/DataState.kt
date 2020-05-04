@@ -19,6 +19,7 @@ sealed class DataState<T>(
         response = Event.responseEvent(response)
     )
 
+    class None<T>(response: Response):DataState<T>(response =Event.responseEvent(response) )
 }
 
 

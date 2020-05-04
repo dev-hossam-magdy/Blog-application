@@ -61,6 +61,13 @@ class BlogPostAdapter @Inject constructor(private val requestManager: RequestMan
         }
     }
 
+    fun preloadGlideImages(list: List<BlogPost>){
+        list.forEach { blogPost ->
+            requestManager
+                .load(blogPost.image)
+                .preload()
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 

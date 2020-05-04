@@ -104,6 +104,8 @@ dependencies {
     def leak_canary_version = "2.2"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leak_canary_version"
 
+    def android_image_cropper ="2.8.+"
+    api "com.theartofdev.edmodo:android-image-cropper:$android_image_cropper"
 //    kapt 'com.android.databinding:compiler:3.0.1
 //    kapt "androidx.databinding:databinding-compiler:4.1.0-alpha04"
 
