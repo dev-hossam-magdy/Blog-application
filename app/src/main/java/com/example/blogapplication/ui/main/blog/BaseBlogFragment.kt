@@ -22,8 +22,6 @@ abstract class BaseBlogFragment : BaseMainFragment(){
     lateinit var factory: ViewModelProviderFactory
     lateinit var viewModel: BlogPostViewModel
 
-    lateinit var stateChangeListener: DataStateChangesListener
-
     lateinit var uiCommunicationListener: UICommunicationListener
 
     override fun onAttach(context: Context) {

@@ -28,7 +28,6 @@ abstract class BaseAccountFragment : BaseMainFragment() {
 
     lateinit var viewModel: AccountViewModel
 
-    lateinit var stateChangeListener: DataStateChangesListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
