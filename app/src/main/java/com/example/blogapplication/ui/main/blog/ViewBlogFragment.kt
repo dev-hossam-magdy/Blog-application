@@ -7,7 +7,6 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
-
 import com.example.blogapplication.R
 import com.example.blogapplication.models.BlogPost
 import com.example.blogapplication.ui.AreYouSureCallback
@@ -109,7 +108,7 @@ class ViewBlogFragment : BaseBlogFragment() {
                     viewBlogFields.blogPost?.let { blogPost ->
                         setBlogPostProperties(blogPost)
                     }
-                    if (!viewBlogFields.isAuthorOfBlogPost)
+                    if (viewBlogFields.isAuthorOfBlogPost)
                         adaptsViewToAuthorMode()
                 }
             }
@@ -133,12 +132,12 @@ class ViewBlogFragment : BaseBlogFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (!viewModel.getIsAuthorOfBlogPost())
+        if (viewModel.getIsAuthorOfBlogPost())
             inflater.inflate(R.menu.edit_view_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (!viewModel.getIsAuthorOfBlogPost() && item.itemId == R.id.edit) {
+        if (viewModel.getIsAuthorOfBlogPost() && item.itemId == R.id.edit) {
             navigateToDestination(R.id.action_viewBlogFragment_to_updateBlogFragment)
             return true
         }

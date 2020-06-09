@@ -114,16 +114,17 @@ class BlogPostViewModel @Inject constructor(
         setStateEvent(BlogPostStateEvent.None())
     }
 
+
+    override fun onCleared() {
+        super.onCleared()
+        cancelActiveJobs()
+    }
+
     fun saveFilterOptions(filter: String, order: String) {
         editor.putString(PreferenceKeys.BLOG_FILTER, filter)
         editor.apply()
         editor.putString(PreferenceKeys.BLOG_ORDER, order)
         editor.apply()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        cancelActiveJobs()
     }
 
     fun removeDeletedBlogPost() {

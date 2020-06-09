@@ -29,18 +29,15 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListene
 
     @Inject
     lateinit var sessionManager: SessionManager
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
 
-    }
 
     abstract fun subscribeObservers()
 
 
     override fun onDataStateChange(dataState: DataState<*>) {
-        dataState?.let {
+        dataState.let {
             GlobalScope.launch(Main) {
-                displayProgessBar(it.isLoading)
+                displayProgressBar(it.isLoading)
                 it.data?.let { data -> handelStateData(it.response, false) }
                     ?: handelStateData(it.response, true)
             }
@@ -48,18 +45,14 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListene
     }
 
     private fun handelStateData(response: Event<Response>?, isErrorEvent: Boolean) {
-        Log.e(TAG, "handelStateError: ${response?.getContentIfNotHandled()?.message}")
         response?.getContentIfNotHandled()?.let { response ->
-            displayProgessBar(false)
+            displayProgressBar(false)
 
             when (response.responseType) {
                 is ResponseType.Dialog -> {
-                    Log.e(TAG, "handelStateError: ResponseType.Dialog:")
+                    Log.e(TAG, "handelStateError: ResponseType.Dialog")
                     response.message?.let { msg ->
-                        if (isErrorEvent)
-                            displayDialogMessage(R.string.text_error, msg)
-                        else
-                            displayDialogMessage(R.string.text_success, msg)
+                        displayDialogMessage(R.string.text_success, msg)
                     }
 
                 }
@@ -82,7 +75,7 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListene
     }
 
 
-    fun displayProgessBar(isLoading: Boolean) {
+    private fun displayProgressBar(isLoading: Boolean) {
         this.progressBar.visibility =
             if (isLoading)
                 View.VISIBLE
@@ -101,7 +94,6 @@ abstract class BaseActivity : DaggerAppCompatActivity(), DataStateChangesListene
         when (uiMessage.uiMessageType) {
             is UIMessageType.AreYouSureDialog ->
                 aryYouSureDialog(uiMessage.message, uiMessage.uiMessageType.callback)
-
             is UIMessageType.Dialog ->
                 displayInfoDialog(uiMessage.message)
             is UIMessageType.Toast ->

@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
-
 import com.example.blogapplication.R
 import com.example.blogapplication.ui.main.blog.state.BlogPostStateEvent
 import com.example.blogapplication.ui.main.blog.viewmodels.getUpdatedBlogUri
@@ -73,6 +72,7 @@ class UpdateBlogFragment : BaseBlogFragment() {
                             findNavController().popBackStack()
                         }
                         // on blog post updated success
+
                     }
                 }
             }
@@ -171,6 +171,7 @@ class UpdateBlogFragment : BaseBlogFragment() {
                 }
             }
         }
+
 
     }
     private fun handelSuccessImageCropping(data: Intent?) {

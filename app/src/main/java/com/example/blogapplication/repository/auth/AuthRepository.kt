@@ -199,7 +199,7 @@ class AuthRepository @Inject constructor(
                 value = DataState.Error(
                     response = Response(
                         message = loginFieldsErrors,
-                        responseType = dialog
+                        responseType = ResponseType.Toast()
                     )
                 )
             }

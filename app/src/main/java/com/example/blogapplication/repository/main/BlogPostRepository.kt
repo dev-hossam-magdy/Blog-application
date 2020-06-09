@@ -37,7 +37,7 @@ class BlogPostRepository @Inject constructor(
     private val blogPostDao: BlogPostDao,
     private val openAPiMainService: OpenAPiMainService
 ) : JobManager("BlogPostRepository") {
-    private val TAG = "JobManager"
+    private val TAG = "BlogPostRepository"
 
 
     fun searchBlogPost(
@@ -54,6 +54,7 @@ class BlogPostRepository @Inject constructor(
                 true
             ) {
             override suspend fun handelApiSuccessResponse(response: GenericApiResponse.ApiSuccessResponse<BlogListSearchResponse>) {
+
                 updatedLocalDataBase(response.body.results)
                 makeCachedRequestAndReturn()
             }
